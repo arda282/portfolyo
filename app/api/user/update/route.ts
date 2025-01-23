@@ -14,6 +14,7 @@ export async function PUT(req: Request) {
     }
 
     const data = await req.json()
+    console.log('Gelen güncelleme verisi:', data)
 
     await connectDB()
 
@@ -33,25 +34,31 @@ export async function PUT(req: Request) {
     if (data.profileImage !== undefined) user.profileImage = data.profileImage
     if (data.socialLinks !== undefined) user.socialLinks = data.socialLinks
 
+    console.log('Güncellenmiş kullanıcı verisi:', user)
     await user.save()
 
+    // Güncellenmiş kullanıcı bilgilerini döndür
+    const updatedUser = {
+      name: user.name,
+      username: user.username,
+      email: user.email,
+      bio: user.bio,
+      location: user.location,
+      website: user.website,
+      profileImage: user.profileImage,
+      socialLinks: user.socialLinks,
+      posts: user.posts
+    }
+
+    console.log('Döndürülen veri:', updatedUser)
     return NextResponse.json({
       message: "Profil güncellendi",
-      user: {
-        name: user.name,
-        username: user.username,
-        email: user.email,
-        bio: user.bio,
-        location: user.location,
-        website: user.website,
-        profileImage: user.profileImage,
-        socialLinks: user.socialLinks
-      }
+      user: updatedUser
     })
   } catch (error: any) {
     console.error("Profil güncelleme hatası:", error)
     return NextResponse.json(
-      { error: "Bir hata oluştu" },
+      { error: "Bir hata oluştu", details: error.message },
       { status: 500 }
     )
   }

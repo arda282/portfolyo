@@ -90,6 +90,7 @@ export default function ProfilePage({ user }: ProfilePageProps) {
 
   const handleUpdateProfile = async () => {
     try {
+      console.log('Güncellenecek profil:', editedUser)
       const response = await fetch('/api/user/update', {
         method: 'PUT',
         headers: {
@@ -103,10 +104,17 @@ export default function ProfilePage({ user }: ProfilePageProps) {
       }
 
       const data = await response.json()
+      console.log('Güncellenmiş profil:', data)
+      
+      // State'i güncelle
       setEditedUser(data.user)
+      // Sayfayı yenile
+      window.location.reload()
+      
       toast.success('Profil güncellendi')
       setIsEditing(false)
     } catch (error) {
+      console.error('Profil güncelleme hatası:', error)
       toast.error('Bir hata oluştu')
     }
   }
