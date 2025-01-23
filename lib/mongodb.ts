@@ -13,27 +13,32 @@ if (!cached) {
 }
 
 async function connectDB() {
-  if (cached.conn) {
-    return cached.conn;
-  }
-
-  if (!cached.promise) {
-    const opts = {
-      bufferCommands: true,
-      maxPoolSize: 10,
-    };
-
-    cached.promise = mongoose.connect(MONGODB_URI, opts);
-  }
-
   try {
+    if (cached.conn) {
+      console.log('Mevcut MongoDB bağlantısı kullanılıyor');
+      return cached.conn;
+    }
+
+    if (!cached.promise) {
+      const opts = {
+        bufferCommands: false,
+        maxPoolSize: 5,
+        serverSelectionTimeoutMS: 5000,
+        socketTimeoutMS: 45000,
+      };
+
+      console.log('Yeni MongoDB bağlantısı oluşturuluyor');
+      cached.promise = mongoose.connect(MONGODB_URI, opts);
+    }
+
     cached.conn = await cached.promise;
+    console.log('MongoDB bağlantısı başarılı');
+    return cached.conn;
   } catch (e) {
+    console.error('MongoDB bağlantı hatası:', e);
     cached.promise = null;
     throw e;
   }
-
-  return cached.conn;
 }
 
 export default connectDB; 

@@ -19,7 +19,6 @@ export const authOptions: AuthOptions = {
     CredentialsProvider({
       id: "credentials",
       name: "Credentials",
-      type: "credentials",
       credentials: {
         email: { label: "Email", type: "text" },
         password: { label: "Password", type: "password" }
@@ -31,7 +30,7 @@ export const authOptions: AuthOptions = {
           }
 
           await connectDB()
-          const user = await UserModel.findOne({ email: credentials.email })
+          const user = await UserModel.findOne({ email: credentials.email }).select('+password')
 
           if (!user) {
             throw new Error('Kullanıcı bulunamadı')
@@ -58,6 +57,7 @@ export const authOptions: AuthOptions = {
             image: user.profileImage || ""
           }
         } catch (error: any) {
+          console.error('Giriş hatası:', error)
           throw new Error(error.message)
         }
       }
@@ -81,7 +81,9 @@ export const authOptions: AuthOptions = {
     signIn: '/auth/login',
   },
   session: {
-    strategy: "jwt"
+    strategy: "jwt",
+    maxAge: 30 * 24 * 60 * 60 // 30 gün
   },
+  debug: process.env.NODE_ENV === 'development',
   secret: process.env.NEXTAUTH_SECRET
 } 
