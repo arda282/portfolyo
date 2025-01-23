@@ -1,10 +1,10 @@
 "use client"
 
-import { useState, useRef } from "react"
+import { useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { useSession, signOut } from "next-auth/react"
-import { Facebook, Github, Instagram, Edit, Plus, Upload, LogOut, MoreVertical, Trash, Edit2, Twitter, Linkedin, Youtube, Twitch, MessageSquare } from "lucide-react"
+import { Facebook, Github, Instagram, Edit, Plus, LogOut, MoreVertical, Trash, Edit2, Twitter, Linkedin, Youtube, Twitch, MessageSquare } from "lucide-react"
 import { toast } from "sonner"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
@@ -57,7 +57,6 @@ export default function ProfilePage({ user }: ProfilePageProps) {
   const [isEditing, setIsEditing] = useState(false)
   const [isAddingPost, setIsAddingPost] = useState(false)
   const [editedUser, setEditedUser] = useState(user)
-  const fileInputRef = useRef<HTMLInputElement>(null)
   const [newPost, setNewPost] = useState<{
     type: 'text' | 'music'
     content?: string
@@ -88,46 +87,6 @@ export default function ProfilePage({ user }: ProfilePageProps) {
     content?: string
     caption: string
   } | null>(null)
-
-  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (!file) return
-
-    const formData = new FormData()
-    formData.append("file", file)
-
-    try {
-      const response = await fetch("/api/upload", {
-        method: "POST",
-        body: formData,
-      })
-
-      if (!response.ok) {
-        throw new Error("Dosya yüklenemedi")
-      }
-
-      const data = await response.json()
-      
-      // Profil resmini güncelle
-      const updateResponse = await fetch('/api/user/update', {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ profileImage: data.url }),
-      })
-
-      if (!updateResponse.ok) {
-        throw new Error("Profil resmi güncellenemedi")
-      }
-
-      const updatedUser = await updateResponse.json()
-      setEditedUser({ ...editedUser, profileImage: data.url })
-      toast.success("Profil resmi güncellendi")
-    } catch (error) {
-      toast.error("Bir hata oluştu")
-    }
-  }
 
   const handleUpdateProfile = async () => {
     try {
@@ -335,23 +294,6 @@ export default function ProfilePage({ user }: ProfilePageProps) {
             <span className="text-3xl sm:text-4xl font-bold text-white">
               {editedUser.name.charAt(0).toUpperCase()}
             </span>
-          )}
-          {isOwner && (
-            <>
-              <input
-                type="file"
-                ref={fileInputRef}
-                onChange={handleFileUpload}
-                className="hidden"
-                accept="image/*"
-              />
-              <button
-                onClick={() => fileInputRef.current?.click()}
-                className="absolute bottom-2 right-2 p-1.5 bg-black/50 rounded-full hover:bg-black/70 transition-colors duration-200"
-              >
-                <Upload className="w-4 h-4" />
-              </button>
-            </>
           )}
         </div>
 
