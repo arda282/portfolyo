@@ -17,42 +17,48 @@ declare module "next-auth" {
 export const authOptions: AuthOptions = {
   providers: [
     CredentialsProvider({
-      name: "credentials",
+      id: "credentials",
+      name: "Credentials",
+      type: "credentials",
       credentials: {
         email: { label: "Email", type: "text" },
         password: { label: "Password", type: "password" }
       },
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) {
-          throw new Error('Lütfen tüm alanları doldurun')
-        }
+        try {
+          if (!credentials?.email || !credentials?.password) {
+            throw new Error('Lütfen tüm alanları doldurun')
+          }
 
-        await connectDB()
-        const user = await UserModel.findOne({ email: credentials.email })
+          await connectDB()
+          const user = await UserModel.findOne({ email: credentials.email })
 
-        if (!user) {
-          throw new Error('Kullanıcı bulunamadı')
-        }
+          if (!user) {
+            throw new Error('Kullanıcı bulunamadı')
+          }
 
-        if (!user.isEmailVerified) {
-          throw new Error('Lütfen önce e-posta adresinizi doğrulayın')
-        }
+          if (!user.isEmailVerified) {
+            throw new Error('Lütfen önce e-posta adresinizi doğrulayın')
+          }
 
-        const isPasswordCorrect = await bcrypt.compare(
-          credentials.password,
-          user.password
-        )
+          const isPasswordCorrect = await bcrypt.compare(
+            credentials.password,
+            user.password
+          )
 
-        if (!isPasswordCorrect) {
-          throw new Error('Şifre yanlış')
-        }
+          if (!isPasswordCorrect) {
+            throw new Error('Şifre yanlış')
+          }
 
-        return {
-          id: user._id.toString(),
-          name: user.name || "",
-          email: user.email,
-          username: user.username,
-          image: user.profileImage || ""
+          return {
+            id: user._id.toString(),
+            name: user.name || "",
+            email: user.email,
+            username: user.username,
+            image: user.profileImage || ""
+          }
+        } catch (error: any) {
+          throw new Error(error.message)
         }
       }
     })
@@ -76,5 +82,6 @@ export const authOptions: AuthOptions = {
   },
   session: {
     strategy: "jwt"
-  }
+  },
+  secret: process.env.NEXTAUTH_SECRET
 } 
