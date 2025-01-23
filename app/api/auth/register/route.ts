@@ -73,7 +73,11 @@ export async function POST(req: Request) {
   } catch (error: any) {
     console.error("Kayıt hatası:", error)
     return NextResponse.json(
-      { error: "Kayıt sırasında bir hata oluştu" },
+      { 
+        error: "Kayıt sırasında bir hata oluştu", 
+        details: error.message,
+        stack: error.stack 
+      },
       { status: 500 }
     )
   }
