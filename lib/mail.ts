@@ -16,7 +16,7 @@ export async function sendVerificationEmail(email: string, token: string) {
     console.log('Doğrulama URL:', verificationUrl);
 
     const result = await resend.emails.send({
-      from: 'onboarding@resend.dev',
+      from: 'noreply@codeizm.com',
       to: email,
       subject: 'E-posta Adresinizi Doğrulayın',
       html: `
