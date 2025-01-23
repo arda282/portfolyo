@@ -5,8 +5,6 @@ import connectDB from "@/lib/mongodb"
 import User from "@/models/User"
 import { sendVerificationEmail } from "@/lib/mail"
 
-let isConnected = false
-
 export async function POST(req: Request) {
   try {
     console.log("Kayıt işlemi başlatıldı")
@@ -20,13 +18,9 @@ export async function POST(req: Request) {
       )
     }
 
-    // Veritabanı bağlantısını kontrol et
-    if (!isConnected) {
-      console.log("Veritabanına bağlanılıyor...")
-      await connectDB()
-      isConnected = true
-      console.log("Veritabanı bağlantısı başarılı")
-    }
+    console.log("Veritabanına bağlanılıyor...")
+    await connectDB()
+    console.log("Veritabanı bağlantısı başarılı")
 
     // Kullanıcı adı veya email ile kayıtlı kullanıcı var mı kontrol et
     console.log("Mevcut kullanıcı kontrolü yapılıyor...")
@@ -72,6 +66,7 @@ export async function POST(req: Request) {
 
     console.log("Kullanıcı veritabanına kaydediliyor...")
     await newUser.save()
+    console.log("Kullanıcı başarıyla kaydedildi")
 
     // Doğrulama e-postası gönder
     console.log("Doğrulama e-postası gönderiliyor...")
@@ -94,11 +89,22 @@ export async function POST(req: Request) {
     })
   } catch (error: any) {
     console.error("Kayıt hatası:", error)
+    // Hata detaylarını kontrol et
+    if (error.code === 11000) {
+      // MongoDB duplicate key error
+      const field = Object.keys(error.keyPattern)[0]
+      return NextResponse.json(
+        { error: `Bu ${field} zaten kullanılıyor` },
+        { status: 400 }
+      )
+    }
+    
     return NextResponse.json(
       { 
         error: "Kayıt sırasında bir hata oluştu", 
         details: error.message,
-        stack: error.stack 
+        stack: error.stack,
+        code: error.code
       },
       { status: 500 }
     )
