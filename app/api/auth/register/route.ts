@@ -5,7 +5,7 @@ import connectDB from "@/lib/mongodb"
 import User from "@/models/User"
 import { sendVerificationEmail } from "@/lib/mail"
 
-export async function POST(req: Request) {
+export const POST = async (req: Request) => {
   try {
     console.log("Kayıt işlemi başlatıldı")
     const { name, username, email, password } = await req.json()
