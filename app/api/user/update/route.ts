@@ -33,6 +33,7 @@ export async function PUT(req: Request) {
     if (data.website !== undefined) user.website = data.website
     if (data.profileImage !== undefined) user.profileImage = data.profileImage
     if (data.socialLinks !== undefined) user.socialLinks = data.socialLinks
+    if (data.backgroundColor !== undefined) user.backgroundColor = data.backgroundColor
 
     console.log('Güncellenmiş kullanıcı verisi:', user)
     await user.save()
@@ -46,6 +47,7 @@ export async function PUT(req: Request) {
       location: user.location,
       website: user.website,
       profileImage: user.profileImage,
+      backgroundColor: user.backgroundColor,
       socialLinks: user.socialLinks,
       posts: user.posts
     }

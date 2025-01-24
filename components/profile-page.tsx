@@ -23,6 +23,10 @@ interface User {
   username: string
   email: string
   profileImage?: string
+  backgroundColor?: {
+    from: string
+    to: string
+  }
   bio?: string
   location?: string
   website?: string
@@ -260,7 +264,10 @@ export default function ProfilePage({ user }: ProfilePageProps) {
   const POST_IMAGE_SIZE = 400 // Post fotoğrafları için
 
   return (
-    <div className="min-h-[125vh] bg-gradient-to-b from-[#629584] to-[#243642] text-white px-2 sm:px-4 pb-8 transition-colors duration-300">
+    <div className="min-h-[125vh] bg-gradient-to-b from-[#629584] to-[#243642] text-white px-2 sm:px-4 pb-8 transition-colors duration-300"
+         style={{
+           backgroundImage: `linear-gradient(to bottom, ${editedUser.backgroundColor?.from || '#629584'}, ${editedUser.backgroundColor?.to || '#243642'})`
+         }}>
       {/* Profil İkonu */}
       {session?.user?.email && (
         <div className="fixed top-2 right-2 sm:top-4 sm:right-4 z-50">
@@ -388,6 +395,50 @@ export default function ProfilePage({ user }: ProfilePageProps) {
                       onChange={(e) => setEditedUser({ ...editedUser, profileImage: e.target.value })}
                       placeholder="https://example.com/image.jpg"
                     />
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium">Profil Arka Plan Renkleri</label>
+                    <div className="grid grid-cols-2 gap-3 mt-2">
+                      <div>
+                        <label className="text-xs text-gray-400">Üst Renk</label>
+                        <div className="flex items-center gap-2">
+                          <input
+                            type="color"
+                            value={editedUser.backgroundColor?.from || '#629584'}
+                            onChange={(e) => setEditedUser({
+                              ...editedUser,
+                              backgroundColor: {
+                                ...editedUser.backgroundColor,
+                                from: e.target.value
+                              }
+                            })}
+                            className="w-full h-10 rounded cursor-pointer"
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <label className="text-xs text-gray-400">Alt Renk</label>
+                        <div className="flex items-center gap-2">
+                          <input
+                            type="color"
+                            value={editedUser.backgroundColor?.to || '#243642'}
+                            onChange={(e) => setEditedUser({
+                              ...editedUser,
+                              backgroundColor: {
+                                ...editedUser.backgroundColor,
+                                to: e.target.value
+                              }
+                            })}
+                            className="w-full h-10 rounded cursor-pointer"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div className="mt-2 h-20 rounded-xl"
+                         style={{
+                           backgroundImage: `linear-gradient(to bottom, ${editedUser.backgroundColor?.from || '#629584'}, ${editedUser.backgroundColor?.to || '#243642'})`
+                         }}>
+                    </div>
                   </div>
                   <div>
                     <label className="text-sm font-medium">Sosyal Medya</label>

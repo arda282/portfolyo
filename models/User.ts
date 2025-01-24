@@ -56,6 +56,16 @@ const userSchema = new mongoose.Schema({
   verificationToken: String,
   verificationTokenExpiry: Date,
   profileImage: String,
+  backgroundColor: {
+    from: {
+      type: String,
+      default: "#629584"
+    },
+    to: {
+      type: String,
+      default: "#243642"
+    }
+  },
   bio: String,
   location: String,
   website: String,
