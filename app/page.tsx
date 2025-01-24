@@ -1,3 +1,7 @@
+"use client"
+
+import Link from "next/link"
+
 export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#629584] to-[#243642] text-white">
@@ -10,18 +14,18 @@ export default function Home() {
           Spotify müziklerinizi ve düşüncelerinizi paylaşabileceğiniz modern bir platform.
         </p>
         <div className="flex flex-col sm:flex-row gap-4">
-          <a
+          <Link
             href="/auth/register"
             className="px-8 py-4 bg-[#ffb829] hover:bg-[#e6a625] text-black font-semibold rounded-xl transition-colors duration-200 text-center"
           >
             Hemen Başla
-          </a>
-          <a
+          </Link>
+          <Link
             href="/auth/login"
             className="px-8 py-4 bg-gray-800/50 hover:bg-gray-700/50 font-semibold rounded-xl transition-colors duration-200 text-center"
           >
             Giriş Yap
-          </a>
+          </Link>
         </div>
       </div>
 
@@ -58,12 +62,12 @@ export default function Home() {
           <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
             Siz de bu yaratıcı topluluğun bir parçası olun ve kendi dijital varlığınızı oluşturun.
           </p>
-          <a
+          <Link
             href="/auth/register"
             className="inline-block px-8 py-4 bg-[#ffb829] hover:bg-[#e6a625] text-black font-semibold rounded-xl transition-colors duration-200"
           >
             Ücretsiz Hesap Oluştur
-          </a>
+          </Link>
         </div>
       </div>
 
