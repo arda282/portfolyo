@@ -408,8 +408,8 @@ export default function ProfilePage({ user }: ProfilePageProps) {
                             onChange={(e) => setEditedUser({
                               ...editedUser,
                               backgroundColor: {
-                                ...editedUser.backgroundColor,
-                                from: e.target.value
+                                from: e.target.value,
+                                to: editedUser.backgroundColor?.to || '#243642'
                               }
                             })}
                             className="w-full h-10 rounded cursor-pointer"
@@ -425,7 +425,7 @@ export default function ProfilePage({ user }: ProfilePageProps) {
                             onChange={(e) => setEditedUser({
                               ...editedUser,
                               backgroundColor: {
-                                ...editedUser.backgroundColor,
+                                from: editedUser.backgroundColor?.from || '#629584',
                                 to: e.target.value
                               }
                             })}
