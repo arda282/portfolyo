@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { getToken } from 'next-auth/jwt'
-import { NextRequest } from 'next/server'
+import type { NextRequest } from 'next/server'
 
 export async function middleware(request: NextRequest) {
   const token = await getToken({ req: request })
@@ -19,6 +19,13 @@ export async function middleware(request: NextRequest) {
     if (pathname === '/') {
       return NextResponse.redirect(new URL('/auth/login', request.url))
     }
+  }
+
+  // Auth sayfalarına erişim kontrolü
+  if (pathname.startsWith('/auth/') && token) {
+    // Kullanıcı giriş yapmışsa ve auth sayfalarına erişmeye çalışıyorsa
+    // kendi profiline yönlendir
+    return NextResponse.redirect(new URL(`/${token.username}`, request.url))
   }
 
   return NextResponse.next()

@@ -1,8 +1,20 @@
 "use client"
 
 import Link from "next/link"
+import { useSession } from "next-auth/react"
+import { useRouter } from "next/navigation"
+import { useEffect } from "react"
 
 export default function Home() {
+  const { data: session } = useSession()
+  const router = useRouter()
+
+  useEffect(() => {
+    if (session?.user?.username) {
+      router.push(`/${session.user.username}`)
+    }
+  }, [session, router])
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#629584] to-[#243642] text-white">
       {/* Hero Section */}
@@ -13,20 +25,22 @@ export default function Home() {
         <p className="text-xl sm:text-2xl text-gray-300 mb-12 max-w-2xl">
           Spotify müziklerinizi ve düşüncelerinizi paylaşabileceğiniz modern bir platform.
         </p>
-        <div className="flex flex-col sm:flex-row gap-4">
-          <Link
-            href="/auth/register"
-            className="px-8 py-4 bg-[#ffb829] hover:bg-[#e6a625] text-black font-semibold rounded-xl transition-colors duration-200 text-center"
-          >
-            Hemen Başla
-          </Link>
-          <Link
-            href="/auth/login"
-            className="px-8 py-4 bg-gray-800/50 hover:bg-gray-700/50 font-semibold rounded-xl transition-colors duration-200 text-center"
-          >
-            Giriş Yap
-          </Link>
-        </div>
+        {!session && (
+          <div className="flex flex-col sm:flex-row gap-4">
+            <Link
+              href="/auth/register"
+              className="px-8 py-4 bg-[#ffb829] hover:bg-[#e6a625] text-black font-semibold rounded-xl transition-colors duration-200 text-center"
+            >
+              Hemen Başla
+            </Link>
+            <Link
+              href="/auth/login"
+              className="px-8 py-4 bg-gray-800/50 hover:bg-gray-700/50 font-semibold rounded-xl transition-colors duration-200 text-center"
+            >
+              Giriş Yap
+            </Link>
+          </div>
+        )}
       </div>
 
       {/* Features Section */}
@@ -62,12 +76,14 @@ export default function Home() {
           <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
             Siz de bu yaratıcı topluluğun bir parçası olun ve kendi dijital varlığınızı oluşturun.
           </p>
-          <Link
-            href="/auth/register"
-            className="inline-block px-8 py-4 bg-[#ffb829] hover:bg-[#e6a625] text-black font-semibold rounded-xl transition-colors duration-200"
-          >
-            Ücretsiz Hesap Oluştur
-          </Link>
+          {!session && (
+            <Link
+              href="/auth/register"
+              className="inline-block px-8 py-4 bg-[#ffb829] hover:bg-[#e6a625] text-black font-semibold rounded-xl transition-colors duration-200"
+            >
+              Ücretsiz Hesap Oluştur
+            </Link>
+          )}
         </div>
       </div>
 
