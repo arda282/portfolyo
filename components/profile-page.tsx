@@ -112,11 +112,11 @@ export default function ProfilePage({ user }: ProfilePageProps) {
       
       // State'i güncelle
       setEditedUser(data.user)
+      setIsEditing(false)
+      toast.success('Profil güncellendi')
+
       // Sayfayı yenile
       window.location.reload()
-      
-      toast.success('Profil güncellendi')
-      setIsEditing(false)
     } catch (error) {
       console.error('Profil güncelleme hatası:', error)
       toast.error('Bir hata oluştu')
