@@ -114,9 +114,11 @@ export default function ProfilePage({ user }: ProfilePageProps) {
       setEditedUser(data.user)
       setIsEditing(false)
       toast.success('Profil güncellendi')
-
-      // Sayfayı yenile
-      window.location.reload()
+      
+      // Sayfayı yeniden yükle
+      setTimeout(() => {
+        window.location.reload()
+      }, 500)
     } catch (error) {
       console.error('Profil güncelleme hatası:', error)
       toast.error('Bir hata oluştu')
@@ -264,9 +266,9 @@ export default function ProfilePage({ user }: ProfilePageProps) {
   const POST_IMAGE_SIZE = 400 // Post fotoğrafları için
 
   return (
-    <div className="min-h-[125vh] bg-gradient-to-b from-[#629584] to-[#243642] text-white px-2 sm:px-4 pb-8 transition-colors duration-300"
+    <div className="min-h-[125vh] bg-gradient-to-b text-white px-2 sm:px-4 pb-8 transition-colors duration-300"
          style={{
-           backgroundImage: `linear-gradient(to bottom, ${editedUser.backgroundColor?.from || '#629584'}, ${editedUser.backgroundColor?.to || '#243642'})`
+           backgroundImage: `linear-gradient(to bottom, ${user.backgroundColor?.from || '#629584'}, ${user.backgroundColor?.to || '#243642'})`
          }}>
       {/* Profil İkonu */}
       {session?.user?.email && (
